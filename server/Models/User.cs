@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 
-public class User : IdentityUser
+namespace ECommerceBE.Models
 {
+    public class User : IdentityUser
+    {
+    }
 }

@@ -1,27 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
+using ECommerceBE.Data;
+using ECommerceBE.Models;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ProductController : ControllerBase
+namespace ECommerceBE.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public ProductController(AppDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProductController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    [HttpGet]
-    public ActionResult<IEnumerable<Product>> GetProducts()
-    {
-        return Ok(_context.Products.ToList());
-    }
+        public ProductController(AppDbContext context)
+        {
+            _context = context;
+        }
 
-    [HttpPost]
-    public ActionResult<Product> AddProduct(Product product)
-    {
-        _context.Products.Add(product);
-        _context.SaveChanges();
-        return CreatedAtAction(nameof(GetProducts), new { id = product.Id }, product);
+        [HttpGet]
+        public ActionResult<IEnumerable<Product>> GetProducts()
+        {
+            return Ok(_context.Products.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult<Product> AddProduct(Product product)
+        {
+            _context.Products.Add(product);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetProducts), new { id = product.Id }, product);
+        }
     }
 }
