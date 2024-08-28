@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ECommerceBE.Data;
 using ECommerceBE.Models;
@@ -22,6 +23,7 @@ namespace ECommerceBE.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult<Product> AddProduct(Product product)
         {
             _context.Products.Add(product);

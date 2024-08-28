@@ -46,6 +46,8 @@ namespace ECommerceBE
                 };
             });
 
+            builder.Services.AddScoped<RoleManager<IdentityRole>>();
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -62,11 +64,17 @@ namespace ECommerceBE
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-Commerce API v1");
-                    c.RoutePrefix = string.Empty; 
+                    c.RoutePrefix = string.Empty;
                 });
             }
 
             app.UseHttpsRedirection();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                Seed(serviceProvider).GetAwaiter().GetResult();
+            }
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -74,6 +82,40 @@ namespace ECommerceBE
             app.MapControllers();
 
             app.Run();
+        }
+
+        static async Task Seed(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+            var roles = new[] { "Admin", "User" };
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            var adminEmail = "admin@email.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                var user = new User
+                {
+                    UserName = "admin",
+                    Email = adminEmail
+                };
+                var result = await userManager.CreateAsync(user, "AdminPassword123!");
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
         }
     }
 }
