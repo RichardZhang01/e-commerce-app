@@ -2,32 +2,129 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Root Variables for Theming */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-light-rgb: 45, 45, 45;
+  /* Darker text for light mode */
+  --foreground-dark-rgb: 240, 240, 240;
+  /* Light text for dark mode */
+  --background-light-rgb: 255, 255, 255;
+  /* White background */
+  --background-dark-rgb: 34, 34, 34;
+  /* Darker background */
+  --primary-color: 0, 123, 255;
+  /* Primary blue */
+  --primary-color-dark: 0, 102, 204;
+  /* Darker blue */
+  --secondary-color: 108, 117, 125;
+  /* Gray tone */
+  --success-color: 40, 167, 69;
+  /* Green for success */
+  --warning-color: 255, 193, 7;
+  /* Yellow for warnings */
+  --danger-color: 220, 53, 69;
+  /* Red for errors */
+  --button-text-color: 255, 255, 255;
+  /* Button text color */
 }
 
+/* Dark Mode Adjustments */
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-light-rgb: 240, 240, 240;
+    --background-light-rgb: 34, 34, 34;
+    --primary-color: 102, 204, 255;
+    --primary-color-dark: 0, 153, 255;
   }
 }
 
+/* Global Body Styles */
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: rgb(var(--foreground-light-rgb));
+  background-color: rgb(var(--background-light-rgb));
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Global Button Styles */
+button,
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  color: rgb(var(--button-text-color));
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover,
+.btn:hover {
+  background-color: rgb(var(--primary-color-dark));
+  /* transform: scale(1.01); */
+}
+
+button:active,
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Link Styles */
+a {
+  color: rgb(var(--primary-color));
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: rgb(var(--secondary-color));
+}
+
+/* Utility Classes for Padding & Margins */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  body {
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 0 1rem;
   }
 }
