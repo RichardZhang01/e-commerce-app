@@ -11,31 +11,33 @@ export default function PasswordRecoveryPage() {
 
     try {
       await axios.post("/api/auth/password-recovery", { email });
-      alert("Password recovery instructions have been sent to your email.");
+      alert(
+        "If an account with that email exists, a recovery link has been sent."
+      );
     } catch (error) {
       console.error("Password recovery failed:", error);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300">
-      <h1 className="text-4xl font-extrabold mb-6 text-stone-800">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 p-4">
+      <h1 className="text-3xl md:text-4xl font-extrabold mb-6 text-stone-800 text-center">
         Password Recovery
       </h1>
       <form
         onSubmit={handlePasswordRecovery}
-        className="bg-white p-8 rounded-lg shadow-lg w-80 max-w-md"
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
       >
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="w-full mb-4 p-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          placeholder="Email"
+          className="text-xs md:text-sm lg:text-base w-full mb-4 p-3 border rounded-lg text-stone-800 border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <button
           type="submit"
-          className="btn bg-yellow-600 hover:bg-yellow-700 w-full"
+          className="btn text-xs md:text-sm lg:text-base bg-indigo-600 hover:bg-indigo-700 w-full text-white py-2 rounded-lg transition duration-300 ease-in-out transform active:scale-95"
         >
           Send Recovery Email
         </button>

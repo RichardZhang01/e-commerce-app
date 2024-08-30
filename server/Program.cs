@@ -46,6 +46,18 @@ namespace ECommerceBE
                 };
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000") 
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials(); 
+                    });
+            });
+
             builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
             builder.Services.AddControllers();
@@ -54,6 +66,7 @@ namespace ECommerceBE
             {
                 c.SwaggerDoc("v1", new() { Title = "E-Commerce API", Version = "v1" });
             });
+
 
             var app = builder.Build();
 
@@ -69,6 +82,8 @@ namespace ECommerceBE
             }
 
             app.UseHttpsRedirection();
+            
+            app.UseCors("AllowFrontend");
 
             using (var scope = app.Services.CreateScope())
             {
