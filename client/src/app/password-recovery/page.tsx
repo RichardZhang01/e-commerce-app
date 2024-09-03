@@ -10,10 +10,10 @@ export default function PasswordRecoveryPage() {
     e.preventDefault();
 
     try {
-      await axios.post("/api/auth/password-recovery", { email });
-      alert(
-        "If an account with that email exists, a recovery link has been sent."
-      );
+      const response = await axios.post("http://localhost:5175/api/auth/password-recovery", {
+        email,
+      });
+      console.log(response);
     } catch (error) {
       console.error("Password recovery failed:", error);
     }

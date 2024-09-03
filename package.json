@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"cd client && npm run dev\" \"cd server && dotnet run\""
+    "dev": "concurrently \"cd server && dotnet run\" \"cd client && npm run dev\""
   },
   "keywords": [],
   "author": "",

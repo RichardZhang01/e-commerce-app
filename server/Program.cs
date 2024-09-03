@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ECommerceBE.Data;
 using ECommerceBE.Models;
+using ECommerceBE.Services;
 
 namespace ECommerceBE
 {
@@ -67,6 +68,7 @@ namespace ECommerceBE
                 c.SwaggerDoc("v1", new() { Title = "E-Commerce API", Version = "v1" });
             });
 
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             var app = builder.Build();
 
