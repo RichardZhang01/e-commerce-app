@@ -2,7 +2,7 @@
 
 "use client";
 
-import ReduxProvider from "@/components/ReduxProvider";
+import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { increment, decrement } from "@/store/slices/counterSlice";
