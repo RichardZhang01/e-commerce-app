@@ -32,14 +32,14 @@ export default function AlertBox({
     setTimeout(() => {
       setVisible(false);
       onClose && onClose();
-    }, 300); 
+    }, 500); 
   };
 
   if (!visible) return null;
 
   return (
     <div
-      className={`fixed top-5 left-0 right-0 mx-auto p-4 w-full max-w-md text-white shadow-lg rounded-md z-50 transition-transform duration-500 ease-in-out ${
+      className={`fixed top-5 w-11/12 md:left-0 md:right-0 md:mx-auto p-3 md:p-4 md:w-full max-w-md text-white shadow-lg rounded-md z-50 transition-transform duration-500 ease-in-out ${
         animateClose
           ? "animate-slideUp" 
           : "animate-slideDown" 
@@ -48,7 +48,7 @@ export default function AlertBox({
       <div className="flex justify-between items-center p-2">
         <p className="m-0 text-sm md:text-base">{message}</p>
         <button
-          className="ml-4 text-2xl leading-none p-0"
+          className="ml-4 text-xl md:text-2xl leading-none p-0"
           onClick={handleClose}
           aria-label="Close"
         >

@@ -70,10 +70,17 @@ export default function PasswordResetPage() {
       setTimeout(() => {
         router.push("/login");
       }, 3000);
-    } catch (err: any) {
-      setHttpError(
-        err.response?.data || "Password reset failed. Please try again."
-      );
+    } catch (error: any) {
+      if (error.response) {
+        setHttpError(
+          error.response?.data ||
+            "Password reset failed. Please try again later."
+        );
+      } else {
+        setHttpError(
+          "Network error. There may be an issue with our servers or your connection. Please try again later."
+        );
+      }
     }
   };
 
