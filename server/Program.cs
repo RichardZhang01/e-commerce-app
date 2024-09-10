@@ -52,10 +52,10 @@ namespace ECommerceBE
                 options.AddPolicy("AllowFrontend",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:3000") 
+                        policy.WithOrigins("http://localhost:3000")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowCredentials(); 
+                            .AllowCredentials();
                     });
             });
 
@@ -84,7 +84,7 @@ namespace ECommerceBE
             }
 
             app.UseHttpsRedirection();
-            
+
             app.UseCors("AllowFrontend");
 
             using (var scope = app.Services.CreateScope())
@@ -105,7 +105,9 @@ namespace ECommerceBE
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var context = serviceProvider.GetRequiredService<AppDbContext>();
 
+            // roles
             var roles = new[] { "Admin", "User" };
 
             foreach (var role in roles)
@@ -116,6 +118,7 @@ namespace ECommerceBE
                 }
             }
 
+            // admin user
             var adminEmail = "admin@email.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -132,6 +135,18 @@ namespace ECommerceBE
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
+            }
+
+            // Seed Products
+            if (!context.Products.Any())
+            {
+                context.Products.AddRange(new List<Product>
+                {
+                    new Product { Name = "Product 1", Price = 29.99M, Description = "First product", StockQuantity = 10, ImageUrl = "image1.jpg", Category = "Category 1" },
+                    new Product { Name = "Product 2", Price = 49.99M, Description = "Second product", StockQuantity = 5, ImageUrl = "image2.jpg", Category = "Category 2" }
+                });
+
+                await context.SaveChangesAsync();
             }
         }
     }
