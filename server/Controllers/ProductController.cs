@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using CloudinaryDotNet.Actions;
 using ECommerceBE.Data;
 using ECommerceBE.Models;
+using ECommerceBE.Services;
 
 namespace ECommerceBE.Controllers
 {
@@ -10,10 +13,12 @@ namespace ECommerceBE.Controllers
     public class ProductController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public ProductController(AppDbContext context)
+        public ProductController(AppDbContext context, ICloudinaryService cloudinaryService)
         {
             _context = context;
+            _cloudinaryService = cloudinaryService;
         }
 
         // GET: all products
@@ -38,11 +43,24 @@ namespace ECommerceBE.Controllers
         // POST: product
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult<Product> AddProduct(Product product)
+        public async Task<ActionResult<Product>> AddProduct([FromForm] Product product, IFormFile[] images)
         {
+            var imageUrls = new List<string>();
+
+            foreach (var image in images)
+            {
+                var uploadedUrl = await _cloudinaryService.UploadImageAsync(image);
+                if (uploadedUrl != null)
+                {
+                    imageUrls.Add(uploadedUrl);
+                }
+            }
+
+            product.ImageUrls = imageUrls.ToArray();
+
             _context.Products.Add(product);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetProducts), new { id = product.Id }, product);
         }
 
         // PUT: product by id
@@ -59,7 +77,7 @@ namespace ECommerceBE.Controllers
             product.Name = updatedProduct.Name;
             product.Price = updatedProduct.Price;
             product.Description = updatedProduct.Description;
-            product.ImageUrl = updatedProduct.ImageUrl;
+            product.ImageUrls = updatedProduct.ImageUrls;
             product.StockQuantity = updatedProduct.StockQuantity;
             product.Category = updatedProduct.Category;
 

@@ -69,6 +69,7 @@ namespace ECommerceBE
             });
 
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             var app = builder.Build();
 
@@ -140,12 +141,25 @@ namespace ECommerceBE
             // Seed Products
             if (!context.Products.Any())
             {
-                context.Products.AddRange(new List<Product>
+                var products = new List<Product>
                 {
-                    new Product { Name = "Product 1", Price = 29.99M, Description = "First product", StockQuantity = 10, ImageUrl = "image1.jpg", Category = "Category 1" },
-                    new Product { Name = "Product 2", Price = 49.99M, Description = "Second product", StockQuantity = 5, ImageUrl = "image2.jpg", Category = "Category 2" }
-                });
-
+                    new Product
+                    {
+                        Name = "Product 1",
+                        Price = 19.99m,
+                        Description = "Description for product 1",
+                        ImageUrls = new[] { "https://picsum.photos/300", "https://picsum.photos/301" }
+                    },
+                    new Product
+                    {
+                        Name = "Product 2",
+                        Price = 29.99m,
+                        Description = "Description for product 2",
+                        ImageUrls = new[] { "https://picsum.photos/302", "https://picsum.photos/303" }
+                    }
+                };
+                
+                context.Products.AddRange(products);
                 await context.SaveChangesAsync();
             }
         }
