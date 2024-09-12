@@ -1,6 +1,18 @@
+import { useEffect } from "react";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setToken } from "@/store/slices/authSlice";
 
 export default function LandingPage() {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(setToken(token));
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 p-4">
       <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-stone-800 text-center">

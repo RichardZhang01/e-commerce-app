@@ -3,7 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import AlertBox from "../../components/AlertBox";
+import AlertBox from "@/components/AlertBox";
 
 export default function PasswordResetPage() {
   const [newPassword, setNewPassword] = useState("");

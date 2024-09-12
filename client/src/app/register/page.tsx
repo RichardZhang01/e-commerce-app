@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import AlertBox from "../../components/AlertBox";
+import AlertBox from "@/components/AlertBox";
 import Link from "next/link";
 
 export default function RegisterPage() {

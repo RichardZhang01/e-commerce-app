@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken } from "@/store/slices/authSlice";
+import { RootState } from "@/store/store";
 import axios from "axios";
-import AlertBox from "../../components/AlertBox";
+import AlertBox from "@/components/AlertBox";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -13,6 +16,16 @@ export default function LoginPage() {
   const [httpError, setHttpError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+
+   useEffect(() => {
+     if (isAuthenticated) {
+       router.push("/"); 
+     }
+   }, [isAuthenticated, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +46,10 @@ export default function LoginPage() {
       setSuccess("Login successful. Redirecting...");
       setError("");
 
-      localStorage.setItem("token", response.data.token);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      dispatch(setToken(token)); 
+
       setTimeout(() => {
         router.push("/");
       }, 3000);

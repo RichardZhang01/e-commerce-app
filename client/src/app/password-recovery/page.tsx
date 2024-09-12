@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import AlertBox from "../../components/AlertBox"; // Import AlertBox
+import AlertBox from "@/components/AlertBox"; // Import AlertBox
 
 export default function PasswordRecoveryPage() {
   const [email, setEmail] = useState("");
