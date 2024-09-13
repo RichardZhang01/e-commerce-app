@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
+import { isJwtExpired } from "@/helpers/checkJwtExpiration";
 
 interface User {
   email: string;
@@ -23,8 +24,17 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-      const decoded: User = jwtDecode(state.token as string); 
+      const token = action.payload;
+
+      if (isJwtExpired(token)) {
+        state.token = null;
+        state.user = null;
+        state.isAuthenticated = false;
+        return;
+      }
+
+      state.token = token;
+      const decoded: User = jwtDecode(token);
       state.user = decoded;
       state.isAuthenticated = true;
     },

@@ -1,39 +1,43 @@
 import { useEffect } from "react";
-import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { setToken } from "@/store/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuth, setToken } from "@/store/slices/authSlice";
+import { isJwtExpired } from "@/helpers/checkJwtExpiration";
+import { RootState } from "@/store/store";
 
 export default function LandingPage() {
   const dispatch = useDispatch();
-  
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(setToken(token));
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken) {
+      if (isJwtExpired(storedToken)) {
+        dispatch(clearAuth());
+        localStorage.removeItem("token");
+      } else {
+        dispatch(setToken(storedToken));
+      }
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 p-4">
       <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-stone-800 text-center">
-        E-Commerce App
+        Welcome to My E-Commerce App
       </h1>
-      <div className="flex space-x-4">
-        <Link
-          href="/login"
-          className="btn text-xs md:text-sm lg:text-base bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition duration-300 ease-in-out transform active:scale-95"
-          style={{ textDecoration: "none" }}
-        >
-          Login
-        </Link>
-        <Link
-          href="/register"
-          className="btn text-xs md:text-sm lg:text-base bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition duration-300 ease-in-out transform active:scale-95"
-          style={{ textDecoration: "none" }}
-        >
-          Register
-        </Link>
-      </div>
+      <p className="text-center text-lg md:text-xl text-gray-700 mb-6">
+        Your one-stop shop for all your needs!
+      </p>
+      {isAuthenticated ? (
+        <p className="text-green-500 text-lg md:text-xl">You are logged in!</p>
+      ) : (
+        <p className="text-red-500 text-lg md:text-xl">
+          Please log in to access your account.
+        </p>
+      )}
     </div>
   );
 }
